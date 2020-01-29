@@ -76,10 +76,10 @@ jobs:
         displayName: 'product build'
 
     # Publish Logs
-    - task: PublishBuildArtifacts@1
+    - task: PublishPipelineArtifact@1
       displayName: Publish Logs
       inputs:
-        pathtoPublish: $(Build.SourcesDirectory)/artifacts/log
+        targetPath: $(Build.SourcesDirectory)/artifacts/log
         artifactName: 'BuildLogs_Mono_$(osGroup)$(osSubgroup)_$(archType)_$(buildConfig)'
       continueOnError: true
       condition: always()
