@@ -2473,18 +2473,14 @@ void setTgtPref(Interval* interval, RefPosition* tgtPrefUse)
 RefPosition* LinearScan::BuildDef(GenTree* tree, regMaskTP dstCandidates, int multiRegIdx)
 {
     assert(!tree->isContained());
+    RegisterType type = getDefType(tree);
 
     if (dstCandidates != RBM_NONE)
     {
         assert((tree->GetRegNum() == REG_NA) || (dstCandidates == genRegMask(tree->GetRegByIndex(multiRegIdx))));
     }
 
-    RegisterType type = getDefType(tree);
-    if (!tree->IsMultiRegNode())
-    {
-        type = getDefType(tree);
-    }
-    else
+    if (tree->IsMultiRegNode())
     {
         type = tree->GetRegTypeByIndex(multiRegIdx);
     }

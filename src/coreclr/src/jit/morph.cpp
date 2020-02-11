@@ -8888,8 +8888,7 @@ GenTree* Compiler::fgMorphOneAsgBlockOp(GenTree* tree)
 
                 if (dest == destLclVarTree)
                 {
-                    GenTree* addr = gtNewOperNode(GT_ADDR, TYP_BYREF, dest);
-                    dest          = gtNewIndir(asgType, addr);
+                    dest = gtNewIndir(asgType, gtNewOperNode(GT_ADDR, TYP_BYREF, dest));
                 }
             }
         }
