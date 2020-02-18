@@ -141,7 +141,7 @@ namespace System.Data.OleDb
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
-            builder.Append("tagDBBINDING").Append(Environment.NewLine);
+            builder.Append("tagDBBINDING_x86").Append(Environment.NewLine);
             builder.Append("\tOrdinal     =" + iOrdinal.ToInt64().ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
             builder.Append("\tValueOffset =" + obValue.ToInt64().ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
             builder.Append("\tLengthOffset=" + obLength.ToInt64().ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
@@ -507,7 +507,7 @@ namespace System.Data.OleDb
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
-            builder.Append("tagDBCOLUMNINFO: " + Convert.ToString(pwszName, CultureInfo.InvariantCulture)).Append(Environment.NewLine);
+            builder.Append("tagDBCOLUMNINFO_x86: " + Convert.ToString(pwszName, CultureInfo.InvariantCulture)).Append(Environment.NewLine);
             builder.Append("\t" + iOrdinal.ToInt64().ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
             builder.Append("\t" + "0x" + dwFlags.ToString("X8", CultureInfo.InvariantCulture)).Append(Environment.NewLine);
             builder.Append("\t" + ulColumnSize.ToInt64().ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
