@@ -559,25 +559,25 @@ namespace System.Data.OleDb
         internal static readonly IntPtr DB_NULL_HROW = ADP.PtrZero;
 
         /*internal static readonly int SizeOf_tagDBPARAMINFO = Marshal.SizeOf(typeof(tagDBPARAMINFO));*/
-        internal static readonly int SizeOf_tagDBBINDING = Marshal.SizeOf(typeof(tagDBBINDING));
-        internal static readonly int SizeOf_tagDBCOLUMNINFO = Marshal.SizeOf(typeof(tagDBCOLUMNINFO));
-        internal static readonly int SizeOf_tagDBLITERALINFO = Marshal.SizeOf(typeof(tagDBLITERALINFO));
-        internal static readonly int SizeOf_tagDBPROPSET = Marshal.SizeOf(typeof(tagDBPROPSET));
-        internal static readonly int SizeOf_tagDBPROP = Marshal.SizeOf(typeof(tagDBPROP));
-        internal static readonly int SizeOf_tagDBPROPINFOSET = Marshal.SizeOf(typeof(tagDBPROPINFOSET));
-        internal static readonly int SizeOf_tagDBPROPINFO = Marshal.SizeOf(typeof(tagDBPROPINFO));
-        internal static readonly int SizeOf_tagDBPROPIDSET = Marshal.SizeOf(typeof(tagDBPROPIDSET));
+        internal static readonly int SizeOf_tagDBBINDING = IsRunningOnX86 ? Marshal.SizeOf(typeof(tagDBBINDING_x86)) :  Marshal.SizeOf(typeof(tagDBBINDING));
+        internal static readonly int SizeOf_tagDBCOLUMNINFO = IsRunningOnX86 ? Marshal.SizeOf(typeof(tagDBCOLUMNINFO_x86)) : Marshal.SizeOf(typeof(tagDBCOLUMNINFO));
+        internal static readonly int SizeOf_tagDBLITERALINFO = IsRunningOnX86 ? Marshal.SizeOf(typeof(tagDBLITERALINFO_x86)) : Marshal.SizeOf(typeof(tagDBLITERALINFO));
+        internal static readonly int SizeOf_tagDBPROPSET = IsRunningOnX86 ? Marshal.SizeOf(typeof(tagDBPROPSET_x86)) : Marshal.SizeOf(typeof(tagDBPROPSET));
+        internal static readonly int SizeOf_tagDBPROP = IsRunningOnX86 ? Marshal.SizeOf(typeof(tagDBPROP_x86)) : Marshal.SizeOf(typeof(tagDBPROP));
+        internal static readonly int SizeOf_tagDBPROPINFOSET = IsRunningOnX86 ? Marshal.SizeOf(typeof(tagDBPROPINFOSET_x86)) :  Marshal.SizeOf(typeof(tagDBPROPINFOSET));
+        internal static readonly int SizeOf_tagDBPROPINFO = IsRunningOnX86 ? Marshal.SizeOf(typeof(tagDBPROPINFO_x86)) :  Marshal.SizeOf(typeof(tagDBPROPINFO));
+        internal static readonly int SizeOf_tagDBPROPIDSET = IsRunningOnX86 ? Marshal.SizeOf(typeof(tagDBPROPIDSET_x86)) : Marshal.SizeOf(typeof(tagDBPROPIDSET));
         internal static readonly int SizeOf_Guid = Marshal.SizeOf(typeof(Guid));
         internal static readonly int SizeOf_Variant = 8 + (2 * ADP.PtrSize); // 16 on 32bit, 24 on 64bit
 
-        internal static readonly int OffsetOf_tagDBPROP_Status = Marshal.OffsetOf(typeof(tagDBPROP), "dwStatus").ToInt32();
-        internal static readonly int OffsetOf_tagDBPROP_Value = Marshal.OffsetOf(typeof(tagDBPROP), "vValue").ToInt32();
-        internal static readonly int OffsetOf_tagDBPROPSET_Properties = Marshal.OffsetOf(typeof(tagDBPROPSET), "rgProperties").ToInt32();
-        internal static readonly int OffsetOf_tagDBPROPINFO_Value = Marshal.OffsetOf(typeof(tagDBPROPINFO), "vValue").ToInt32();
-        internal static readonly int OffsetOf_tagDBPROPIDSET_PropertySet = Marshal.OffsetOf(typeof(tagDBPROPIDSET), "guidPropertySet").ToInt32();
-        internal static readonly int OffsetOf_tagDBLITERALINFO_it = Marshal.OffsetOf(typeof(tagDBLITERALINFO), "it").ToInt32();
-        internal static readonly int OffsetOf_tagDBBINDING_obValue = Marshal.OffsetOf(typeof(tagDBBINDING), "obValue").ToInt32();
-        internal static readonly int OffsetOf_tagDBBINDING_wType = Marshal.OffsetOf(typeof(tagDBBINDING), "wType").ToInt32();
+        internal static readonly int OffsetOf_tagDBPROP_Status = IsRunningOnX86 ? Marshal.OffsetOf(typeof(tagDBPROP_x86), "dwStatus").ToInt32() : Marshal.OffsetOf(typeof(tagDBPROP), "dwStatus").ToInt32();
+        internal static readonly int OffsetOf_tagDBPROP_Value = IsRunningOnX86 ? Marshal.OffsetOf(typeof(tagDBPROP_x86), "vValue").ToInt32() : Marshal.OffsetOf(typeof(tagDBPROP), "vValue").ToInt32();
+        internal static readonly int OffsetOf_tagDBPROPSET_Properties = IsRunningOnX86 ? Marshal.OffsetOf(typeof(tagDBPROPSET_x86), "rgProperties").ToInt32() : Marshal.OffsetOf(typeof(tagDBPROPSET), "rgProperties").ToInt32();
+        internal static readonly int OffsetOf_tagDBPROPINFO_Value = IsRunningOnX86 ? Marshal.OffsetOf(typeof(tagDBPROPINFO_x86), "vValue").ToInt32() : Marshal.OffsetOf(typeof(tagDBPROPINFO), "vValue").ToInt32();
+        internal static readonly int OffsetOf_tagDBPROPIDSET_PropertySet = IsRunningOnX86 ? Marshal.OffsetOf(typeof(tagDBPROPIDSET_x86), "guidPropertySet").ToInt32() : Marshal.OffsetOf(typeof(tagDBPROPIDSET), "guidPropertySet").ToInt32();
+        internal static readonly int OffsetOf_tagDBLITERALINFO_it = IsRunningOnX86 ? Marshal.OffsetOf(typeof(tagDBLITERALINFO_x86), "it").ToInt32() : Marshal.OffsetOf(typeof(tagDBLITERALINFO), "it").ToInt32();
+        internal static readonly int OffsetOf_tagDBBINDING_obValue = IsRunningOnX86 ? Marshal.OffsetOf(typeof(tagDBBINDING_x86), "obValue").ToInt32() : Marshal.OffsetOf(typeof(tagDBBINDING), "obValue").ToInt32();
+        internal static readonly int OffsetOf_tagDBBINDING_wType = IsRunningOnX86 ? Marshal.OffsetOf(typeof(tagDBBINDING_x86), "wType").ToInt32() : Marshal.OffsetOf(typeof(tagDBBINDING), "wType").ToInt32();
 
         internal static Guid IID_NULL = Guid.Empty;
         internal static Guid IID_IUnknown = new Guid(0x00000000, 0x0000, 0x0000, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46);

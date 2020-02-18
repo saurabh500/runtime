@@ -110,11 +110,52 @@ namespace System.Data.OleDb
     }
 #endif
 
-#if (WIN32 && !ARCH_arm)
     [StructLayoutAttribute(LayoutKind.Sequential, Pack = 2)]
-#else
-    [StructLayout(LayoutKind.Sequential, Pack = 8)]
+    internal sealed class tagDBBINDING_x86
+    {
+        internal IntPtr iOrdinal;
+        internal IntPtr obValue;
+        internal IntPtr obLength;
+        internal IntPtr obStatus;
+
+        internal IntPtr pTypeInfo;
+        internal IntPtr pObject;
+        internal IntPtr pBindExt;
+
+        internal int dwPart;
+        internal int dwMemOwner;
+        internal int eParamIO;
+
+        internal IntPtr cbMaxLen;
+
+        internal int dwFlags;
+        internal short wType;
+        internal byte bPrecision;
+        internal byte bScale;
+
+        internal tagDBBINDING_x86()
+        {
+        }
+
+#if DEBUG
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append("tagDBBINDING").Append(Environment.NewLine);
+            builder.Append("\tOrdinal     =" + iOrdinal.ToInt64().ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
+            builder.Append("\tValueOffset =" + obValue.ToInt64().ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
+            builder.Append("\tLengthOffset=" + obLength.ToInt64().ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
+            builder.Append("\tStatusOffset=" + obStatus.ToInt64().ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
+            builder.Append("\tMaxLength   =" + cbMaxLen.ToInt64().ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
+            builder.Append("\tDB_Type     =" + ODB.WLookup(wType)).Append(Environment.NewLine);
+            builder.Append("\tPrecision   =" + bPrecision.ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
+            builder.Append("\tScale       =" + bScale.ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
+            return builder.ToString();
+        }
 #endif
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
     internal sealed class tagDBBINDING
     {
         internal IntPtr iOrdinal;
@@ -241,11 +282,31 @@ namespace System.Data.OleDb
         ULONG cchMaxLen;
     }
 #endif
-#if (WIN32 && !ARCH_arm)
+
     [StructLayoutAttribute(LayoutKind.Sequential, Pack = 2)]
-#else
+    internal sealed class tagDBLITERALINFO_x86
+    {
+        [MarshalAs(UnmanagedType.LPWStr)]
+        internal string pwszLiteralValue = null;
+
+        [MarshalAs(UnmanagedType.LPWStr)]
+        internal string pwszInvalidChars = null;
+
+        [MarshalAs(UnmanagedType.LPWStr)]
+        internal string pwszInvalidStartingChars = null;
+
+        internal int it;
+
+        internal int fSupported;
+
+        internal int cchMaxLen;
+
+        internal tagDBLITERALINFO_x86()
+        {
+        }
+    }
+
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
-#endif
     internal sealed class tagDBLITERALINFO
     {
         [MarshalAs(UnmanagedType.LPWStr)]
@@ -275,11 +336,26 @@ namespace System.Data.OleDb
         GUID guidPropertySet;
     }
 #endif
-#if (WIN32 && !ARCH_arm)
+
     [StructLayoutAttribute(LayoutKind.Sequential, Pack = 2)]
-#else
+    internal sealed class tagDBPROPSET_x86
+    {
+        internal IntPtr rgProperties;
+        internal int cProperties;
+        internal Guid guidPropertySet;
+
+        internal tagDBPROPSET_x86()
+        {
+        }
+
+        internal tagDBPROPSET_x86(int propertyCount, Guid propertySet)
+        {
+            cProperties = propertyCount;
+            guidPropertySet = propertySet;
+        }
+    }
+
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
-#endif
     internal sealed class tagDBPROPSET
     {
         internal IntPtr rgProperties;
@@ -306,11 +382,32 @@ namespace System.Data.OleDb
         VARIANT vValue;
     }
 #endif
-#if (WIN32 && !ARCH_arm)
+
     [StructLayoutAttribute(LayoutKind.Sequential, Pack = 2)]
-#else
+    internal sealed class tagDBPROP_x86
+    {
+        internal int dwPropertyID;
+        internal int dwOptions;
+        internal OleDbPropertyStatus dwStatus;
+
+        internal tagDBIDX columnid;
+
+        // Variant
+        [MarshalAs(UnmanagedType.Struct)] internal object vValue;
+
+        internal tagDBPROP_x86()
+        {
+        }
+
+        internal tagDBPROP_x86(int propertyID, bool required, object value)
+        {
+            dwPropertyID = propertyID;
+            dwOptions = ((required) ? ODB.DBPROPOPTIONS_REQUIRED : ODB.DBPROPOPTIONS_OPTIONAL);
+            vValue = value;
+        }
+    }
+
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
-#endif
     internal sealed class tagDBPROP
     {
         internal int dwPropertyID;
@@ -341,11 +438,20 @@ namespace System.Data.OleDb
         HACCESSOR hAccessor;
     }
 #endif
-#if (WIN32 && !ARCH_arm)
+
     [StructLayoutAttribute(LayoutKind.Sequential, Pack = 2)]
-#else
+     internal sealed class tagDBPARAMS_x86
+    {
+        internal IntPtr pData;
+        internal int cParamSets;
+        internal IntPtr hAccessor;
+
+        internal tagDBPARAMS_x86()
+        {
+        }
+    }
+
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
-#endif
     internal sealed class tagDBPARAMS
     {
         internal IntPtr pData;
@@ -370,11 +476,51 @@ namespace System.Data.OleDb
         DBID columnid;
     }
 #endif
-#if (WIN32 && !ARCH_arm)
+
     [StructLayoutAttribute(LayoutKind.Sequential, Pack = 2)]
-#else
-    [StructLayout(LayoutKind.Sequential, Pack = 8)]
+    internal sealed class tagDBCOLUMNINFO_x86
+    {
+        [MarshalAs(UnmanagedType.LPWStr)]
+        internal string pwszName = null;
+
+        //[MarshalAs(UnmanagedType.Interface)]
+        internal IntPtr pTypeInfo = (IntPtr)0;
+
+        internal IntPtr iOrdinal = (IntPtr)0;
+
+        internal int dwFlags = 0;
+
+        internal IntPtr ulColumnSize = (IntPtr)0;
+
+        internal short wType = 0;
+
+        internal byte bPrecision = 0;
+
+        internal byte bScale = 0;
+
+        internal tagDBIDX columnid;
+
+        internal tagDBCOLUMNINFO_x86()
+        {
+        }
+#if DEBUG
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append("tagDBCOLUMNINFO: " + Convert.ToString(pwszName, CultureInfo.InvariantCulture)).Append(Environment.NewLine);
+            builder.Append("\t" + iOrdinal.ToInt64().ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
+            builder.Append("\t" + "0x" + dwFlags.ToString("X8", CultureInfo.InvariantCulture)).Append(Environment.NewLine);
+            builder.Append("\t" + ulColumnSize.ToInt64().ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
+            builder.Append("\t" + "0x" + wType.ToString("X2", CultureInfo.InvariantCulture)).Append(Environment.NewLine);
+            builder.Append("\t" + bPrecision.ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
+            builder.Append("\t" + bScale.ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
+            builder.Append("\t" + columnid.eKind.ToString(CultureInfo.InvariantCulture)).Append(Environment.NewLine);
+            return builder.ToString();
+        }
 #endif
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
     internal sealed class tagDBCOLUMNINFO
     {
         [MarshalAs(UnmanagedType.LPWStr)]
@@ -424,11 +570,20 @@ namespace System.Data.OleDb
         GUID guidPropertySet;
     }
 #endif
-#if (WIN32 && !ARCH_arm)
+
     [StructLayoutAttribute(LayoutKind.Sequential, Pack = 2)]
-#else
+    internal sealed class tagDBPROPINFOSET_x86
+    {
+        internal IntPtr rgPropertyInfos;
+        internal int cPropertyInfos;
+        internal Guid guidPropertySet;
+
+        internal tagDBPROPINFOSET_x86()
+        {
+        }
+    }
+
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
-#endif
     internal sealed class tagDBPROPINFOSET
     {
         internal IntPtr rgPropertyInfos;
@@ -449,11 +604,25 @@ namespace System.Data.OleDb
         VARIANT vValues;
     }
 #endif
-#if (WIN32 && !ARCH_arm)
+
     [StructLayoutAttribute(LayoutKind.Sequential, Pack = 2)]
-#else
+    internal sealed class tagDBPROPINFO_x86
+    {
+        [MarshalAs(UnmanagedType.LPWStr)] internal string pwszDescription;
+
+        internal int dwPropertyID;
+        internal int dwFlags;
+
+        internal short vtType;
+
+        [MarshalAs(UnmanagedType.Struct)] internal object vValue;
+
+        internal tagDBPROPINFO_x86()
+        {
+        }
+    }
+
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
-#endif
     internal sealed class tagDBPROPINFO
     {
         [MarshalAs(UnmanagedType.LPWStr)] internal string pwszDescription;
@@ -477,11 +646,17 @@ namespace System.Data.OleDb
         GUID guidPropertySet;
     }
 #endif
-#if (WIN32 && !ARCH_arm)
+
     [StructLayoutAttribute(LayoutKind.Sequential, Pack = 2)]
-#else
+    internal struct tagDBPROPIDSET_x86
+    {
+        internal IntPtr rgPropertyIDs;
+        internal int cPropertyIDs;
+        internal Guid guidPropertySet;
+    }
+
+
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
-#endif
     internal struct tagDBPROPIDSET
     {
         internal IntPtr rgPropertyIDs;
