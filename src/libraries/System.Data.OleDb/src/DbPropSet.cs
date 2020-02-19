@@ -181,15 +181,35 @@ namespace System.Data.OleDb
             {
                 DangerousAddRef(ref mustRelease);
                 IntPtr propertySetPtr = ADP.IntPtrOffset(DangerousGetHandle(), index * ODB.SizeOf_tagDBPROPSET);
-                Marshal.PtrToStructure(propertySetPtr, propset);
+                if (ODB.IsRunningOnX86)
+                {
+                    tagDBPROPSET_x86 propset_x86 = new tagDBPROPSET_x86();
+                    Marshal.PtrToStructure(propertySetPtr, propset_x86);
+                    propset = (tagDBPROPSET)propset_x86;
+                }
+                else
+                {
+                    Marshal.PtrToStructure(propertySetPtr, propset);
+                }
                 propertyset = propset.guidPropertySet;
 
                 properties = new tagDBPROP[propset.cProperties];
                 for (int i = 0; i < properties.Length; ++i)
                 {
-                    properties[i] = new tagDBPROP();
-                    IntPtr ptr = ADP.IntPtrOffset(propset.rgProperties, i * ODB.SizeOf_tagDBPROP);
-                    Marshal.PtrToStructure(ptr, properties[i]);
+                    if (ODB.IsRunningOnX86)
+                    {
+                        tagDBPROP_x86 p = new tagDBPROP_x86();
+                        IntPtr ptr = ADP.IntPtrOffset(propset.rgProperties, i * ODB.SizeOf_tagDBPROP);
+                        Marshal.PtrToStructure(ptr, p);
+                        properties[i] = (tagDBPROP)p;
+                    }
+                    else
+                    {
+                        tagDBPROP p = new tagDBPROP();
+                        IntPtr ptr = ADP.IntPtrOffset(propset.rgProperties, i * ODB.SizeOf_tagDBPROP);
+                        Marshal.PtrToStructure(ptr, p);
+                        properties[i] = p;
+                    }
                 }
             }
             finally

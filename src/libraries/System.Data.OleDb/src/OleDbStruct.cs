@@ -6,9 +6,10 @@ using System.Runtime.InteropServices;
 
 namespace System.Data.OleDb
 {
+    using System;
 #if DEBUG
-    using Globalization;
-    using Text;
+    using System.Globalization;
+    using System.Text;
 #endif
 
     internal enum DBBindStatus
@@ -371,6 +372,16 @@ namespace System.Data.OleDb
             cProperties = propertyCount;
             guidPropertySet = propertySet;
         }
+
+        public static explicit operator tagDBPROPSET(tagDBPROPSET_x86 v)
+        {
+            return new tagDBPROPSET
+            {
+                rgProperties = v.rgProperties,
+                cProperties = v.cProperties,
+                guidPropertySet = v.guidPropertySet
+            };
+        }
     }
 
 #if false
@@ -428,6 +439,16 @@ namespace System.Data.OleDb
             dwPropertyID = propertyID;
             dwOptions = ((required) ? ODB.DBPROPOPTIONS_REQUIRED : ODB.DBPROPOPTIONS_OPTIONAL);
             vValue = value;
+        }
+
+        public static explicit operator tagDBPROP(tagDBPROP_x86 v)
+        {
+            return new tagDBPROP
+            {
+                dwPropertyID = v.dwPropertyID,
+                dwOptions = v.dwOptions,
+                dwStatus = v.dwStatus
+            };
         }
     }
 
