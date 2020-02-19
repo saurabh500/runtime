@@ -447,7 +447,9 @@ namespace System.Data.OleDb
             {
                 dwPropertyID = v.dwPropertyID,
                 dwOptions = v.dwOptions,
-                dwStatus = v.dwStatus
+                dwStatus = v.dwStatus,
+                vValue = v.vValue,
+                columnid = v.columnid
             };
         }
     }
