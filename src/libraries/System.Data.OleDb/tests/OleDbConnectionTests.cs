@@ -357,5 +357,16 @@ namespace System.Data.OleDb.Tests
             Assert.True(connectionStringBuilder.Remove("Provider"));
             Assert.Empty(connectionStringBuilder.Provider);
         }
+
+        [Fact]
+        public void ConnectionStringTest()
+        {
+            OleDbConnectionStringBuilder builder = new OleDbConnectionStringBuilder();
+            builder.Provider = "Microsoft.ACE.OLEDB.12.0";
+            builder.DataSource = "myDB.accdb";
+            string connStr = builder.ConnectionString;
+
+            Assert.Equal("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=myDB.accdb", connStr);
+        }
     }
 }
