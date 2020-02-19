@@ -69,28 +69,15 @@ namespace System.Data.OleDb
                     propertyLookup = new Dictionary<string, OleDbPropertyInfo>(StringComparer.OrdinalIgnoreCase);
 
                     IntPtr setPtr = this.handle;
-                    tagDBPROPINFO propinfo = new tagDBPROPINFO();
-                    tagDBPROPINFOSET propinfoset = new tagDBPROPINFOSET();
 
                     for (int i = 0; i < setCount; ++i, setPtr = ADP.IntPtrOffset(setPtr, ODB.SizeOf_tagDBPROPINFOSET))
                     {
-                        Marshal.PtrToStructure(setPtr, propinfoset);
-
-                        int infoCount = propinfoset.cPropertyInfos;
-                        IntPtr infoPtr = propinfoset.rgPropertyInfos;
+                        Tuple<int, IntPtr, Guid> propertyInfoSet = GetPropertyInfoSet(setPtr);
+                        int infoCount = propertyInfoSet.Item1;
+                        IntPtr infoPtr = propertyInfoSet.Item2;
                         for (int k = 0; k < infoCount; ++k, infoPtr = ADP.IntPtrOffset(infoPtr, ODB.SizeOf_tagDBPROPINFO))
                         {
-                            Marshal.PtrToStructure(infoPtr, propinfo);
-
-                            OleDbPropertyInfo propertyInfo = new OleDbPropertyInfo();
-                            propertyInfo._propertySet = propinfoset.guidPropertySet;
-                            propertyInfo._propertyID = propinfo.dwPropertyID;
-                            propertyInfo._flags = propinfo.dwFlags;
-                            propertyInfo._vtype = propinfo.vtType;
-                            propertyInfo._supportedValues = propinfo.vValue;
-                            propertyInfo._description = propinfo.pwszDescription;
-                            propertyInfo._lowercase = propinfo.pwszDescription.ToLowerInvariant();
-                            propertyInfo._type = PropertyInfoSet.FromVtType(propinfo.vtType);
+                            OleDbPropertyInfo propertyInfo = RetrievePropertyInfo(infoPtr, propertyInfoSet.Item3);
 
                             propertyLookup[propertyInfo._lowercase] = propertyInfo;
                         }
@@ -105,6 +92,63 @@ namespace System.Data.OleDb
                 }
             }
             return propertyLookup;
+        }
+
+        private OleDbPropertyInfo RetrievePropertyInfo(IntPtr infoPtr, Guid guidPropertySet)
+        {
+            OleDbPropertyInfo propertyInfo = new OleDbPropertyInfo();
+            if (ODB.IsRunningOnX86)
+            {
+                tagDBPROPINFO_x86 propinfo = new tagDBPROPINFO_x86();
+                Marshal.PtrToStructure(infoPtr, propinfo);
+                propertyInfo._propertySet = guidPropertySet;
+                propertyInfo._propertyID = propinfo.dwPropertyID;
+                propertyInfo._flags = propinfo.dwFlags;
+                propertyInfo._vtype = propinfo.vtType;
+                propertyInfo._supportedValues = propinfo.vValue;
+                propertyInfo._description = propinfo.pwszDescription;
+                propertyInfo._lowercase = propinfo.pwszDescription.ToLowerInvariant();
+                propertyInfo._type = PropertyInfoSet.FromVtType(propinfo.vtType);
+            }
+            else
+            {
+                tagDBPROPINFO propinfo = new tagDBPROPINFO();
+                Marshal.PtrToStructure(infoPtr, propinfo);
+                propertyInfo._propertySet = guidPropertySet;
+                propertyInfo._propertyID = propinfo.dwPropertyID;
+                propertyInfo._flags = propinfo.dwFlags;
+                propertyInfo._vtype = propinfo.vtType;
+                propertyInfo._supportedValues = propinfo.vValue;
+                propertyInfo._description = propinfo.pwszDescription;
+                propertyInfo._lowercase = propinfo.pwszDescription.ToLowerInvariant();
+                propertyInfo._type = PropertyInfoSet.FromVtType(propinfo.vtType);
+            }
+            return propertyInfo;
+        }
+
+        private Tuple<int, IntPtr, Guid> GetPropertyInfoSet(IntPtr setPtr)
+        {
+            int infoCount;
+            IntPtr infoPtr;
+            Guid guidPropertySet;
+            if (ODB.IsRunningOnX86)
+            {
+                tagDBPROPINFOSET_x86 propinfoset = new tagDBPROPINFOSET_x86();
+                Marshal.PtrToStructure(setPtr, propinfoset);
+                infoCount = propinfoset.cPropertyInfos;
+                infoPtr = propinfoset.rgPropertyInfos;
+                guidPropertySet = propinfoset.guidPropertySet;
+            }
+            else
+            {
+                tagDBPROPINFOSET propinfoset = new tagDBPROPINFOSET();
+                Marshal.PtrToStructure(setPtr, propinfoset);
+                infoCount = propinfoset.cPropertyInfos;
+                infoPtr = propinfoset.rgPropertyInfos;
+                guidPropertySet = propinfoset.guidPropertySet;
+            }
+
+            return Tuple.Create(infoCount, infoPtr, guidPropertySet);
         }
 
         protected override bool ReleaseHandle()

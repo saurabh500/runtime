@@ -558,6 +558,10 @@ namespace System.Data.OleDb
         internal static readonly IntPtr DB_NULL_HCHAPTER = ADP.PtrZero;
         internal static readonly IntPtr DB_NULL_HROW = ADP.PtrZero;
 
+        // Indicates whether the library is being used on X86 platform. The location of declaration of this static method is important and it should be evaluated before the evaluation
+        // of other static members which use this value for computing the size.
+        internal static readonly bool IsRunningOnX86 = RuntimeInformation.ProcessArchitecture == Architecture.X86;
+
         /*internal static readonly int SizeOf_tagDBPARAMINFO = Marshal.SizeOf(typeof(tagDBPARAMINFO));*/
         internal static readonly int SizeOf_tagDBBINDING = IsRunningOnX86 ? Marshal.SizeOf(typeof(tagDBBINDING_x86)) :  Marshal.SizeOf(typeof(tagDBBINDING));
         internal static readonly int SizeOf_tagDBCOLUMNINFO = IsRunningOnX86 ? Marshal.SizeOf(typeof(tagDBCOLUMNINFO_x86)) : Marshal.SizeOf(typeof(tagDBCOLUMNINFO));
@@ -686,8 +690,6 @@ namespace System.Data.OleDb
         // OleDbConnection.GetOleDbSchemmaTable(OleDbSchemaGuid.DbInfoKeywords) table and column names
         internal const string DbInfoKeywords = "DbInfoKeywords";
         internal const string Keyword = "Keyword";
-
-        internal static readonly bool IsRunningOnX86 = RuntimeInformation.ProcessArchitecture == Architecture.X86;
 
         // Debug error string writeline
         internal static string ELookup(OleDbHResult hr)
