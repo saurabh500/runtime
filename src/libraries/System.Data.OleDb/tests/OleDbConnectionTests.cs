@@ -359,14 +359,27 @@ namespace System.Data.OleDb.Tests
         }
 
         [Fact]
-        public void ConnectionStringTest()
+        public void ConnectionStringEqualityTest()
         {
-            OleDbConnectionStringBuilder builder = new OleDbConnectionStringBuilder();
-            builder.Provider = "Microsoft.ACE.OLEDB.12.0";
-            builder.DataSource = "myDB.accdb";
+            OleDbConnectionStringBuilder builder = new OleDbConnectionStringBuilder
+            {
+                Provider = "Microsoft.ACE.OLEDB.12.0",
+                DataSource = "myDB.accdb"
+            };
             string connStr = builder.ConnectionString;
-
             Assert.Equal("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=myDB.accdb", connStr);
+        }
+
+        [ConditionalFact(Helpers.IsDriverAvailable)]
+        public void ConnectionPropertiesTest()
+        {
+            string version = string.Empty;
+            using(OleDbConnection connection = new OleDbConnection(ConnectionString))
+            {
+                connection.Open();
+                version = connection.ServerVersion;
+            }
+            Assert.True(!string.IsNullOrEmpty(version));
         }
     }
 }
