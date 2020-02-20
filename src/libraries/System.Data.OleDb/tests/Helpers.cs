@@ -21,7 +21,7 @@ namespace System.Data.OleDb.Tests
             public static readonly string ProviderName;
             public static Nested Instance => s_instance;
             private static readonly Nested s_instance = new Nested();
-            private const string ExpectedProviderName = @"Microsoft.ACE.OLEDB.12.0";
+            private static string ExpectedProviderName = PlatformDetection.Is32BitProcess ? @"Microsoft.Jet.OLEDB.4.0" : @"Microsoft.ACE.OLEDB.12.0";
             private Nested() { }
             static Nested()
             {
@@ -34,7 +34,7 @@ namespace System.Data.OleDb.Tests
                     providerNames.Add((string)row[providersRegistered]);
                 }
                 // skip if x86 or if the expected driver not available
-                IsAvailable = !PlatformDetection.Is32BitProcess && providerNames.Contains(ExpectedProviderName);
+                IsAvailable = providerNames.Contains(ExpectedProviderName);
                 if (!CultureInfo.CurrentCulture.Name.Equals("en-US", StringComparison.OrdinalIgnoreCase))
                 {
                     IsAvailable = false; // ActiveIssue: https://github.com/dotnet/corefx/issues/38737

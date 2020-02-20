@@ -9,6 +9,7 @@ namespace System.Data.OleDb
     using System;
 #if DEBUG
     using System.Globalization;
+    using System.Reflection.Emit;
     using System.Text;
 #endif
 
@@ -249,11 +250,15 @@ namespace System.Data.OleDb
     }
 #endif
 
-#if (WIN32 && !ARCH_arm)
     [StructLayoutAttribute(LayoutKind.Sequential, Pack = 2)]
-#else
+    internal struct tagDBIDX_x86
+    {
+        internal Guid uGuid;
+        internal int eKind;
+        internal IntPtr ulPropid;
+    }
+
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
-#endif
     internal struct tagDBIDX
     {
         internal Guid uGuid;
@@ -261,11 +266,17 @@ namespace System.Data.OleDb
         internal IntPtr ulPropid;
     }
 
-#if (WIN32 && !ARCH_arm)
+
     [StructLayoutAttribute(LayoutKind.Sequential, Pack = 2)]
-#else
+    internal sealed class tagDBID_x86
+    {
+        internal Guid uGuid;
+        internal int eKind;
+        internal IntPtr ulPropid;
+    }
+
+
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
-#endif
     internal sealed class tagDBID
     {
         internal Guid uGuid;
@@ -284,7 +295,7 @@ namespace System.Data.OleDb
     }
 #endif
 
-    [StructLayoutAttribute(LayoutKind.Sequential, Pack = 2)]
+    [StructLayout(LayoutKind.Sequential, Pack = 2)]
     internal sealed class tagDBLITERALINFO_x86
     {
         [MarshalAs(UnmanagedType.LPWStr)]
@@ -338,40 +349,42 @@ namespace System.Data.OleDb
     }
 #endif
 
-    [StructLayoutAttribute(LayoutKind.Sequential, Pack = 2)]
-    internal sealed class tagDBPROPSET_x86
+    [StructLayout(LayoutKind.Sequential)]
+    internal class tagDBPROPSETBASE
     {
         internal IntPtr rgProperties;
         internal int cProperties;
         internal Guid guidPropertySet;
 
-        internal tagDBPROPSET_x86()
-        {
-        }
-
-        internal tagDBPROPSET_x86(int propertyCount, Guid propertySet)
+        internal tagDBPROPSETBASE(int propertyCount, Guid propertySet)
         {
             cProperties = propertyCount;
             guidPropertySet = propertySet;
+        }
+
+        internal tagDBPROPSETBASE() { }
+    }
+
+    [StructLayoutAttribute(LayoutKind.Sequential, Pack = 2)]
+    internal sealed class tagDBPROPSET_x86 : tagDBPROPSETBASE
+    {
+        internal tagDBPROPSET_x86() : base()
+        {
+        }
+
+        internal tagDBPROPSET_x86(int propertyCount, Guid propertySet) : base(propertyCount, propertySet)
+        {
         }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
-    internal sealed class tagDBPROPSET
+    internal sealed class tagDBPROPSET : tagDBPROPSETBASE
     {
-        internal IntPtr rgProperties;
-        internal int cProperties;
-        internal Guid guidPropertySet;
-
-        internal tagDBPROPSET()
+        internal tagDBPROPSET(int propertyCount, Guid propertySet) : base(propertyCount, propertySet)
         {
         }
 
-        internal tagDBPROPSET(int propertyCount, Guid propertySet)
-        {
-            cProperties = propertyCount;
-            guidPropertySet = propertySet;
-        }
+        internal tagDBPROPSET() : base() { }
 
         public static explicit operator tagDBPROPSET(tagDBPROPSET_x86 v)
         {
@@ -401,7 +414,7 @@ namespace System.Data.OleDb
         internal int dwOptions;
         internal OleDbPropertyStatus dwStatus;
 
-        internal tagDBIDX columnid;
+        internal tagDBIDX_x86 columnid;
 
         // Variant
         [MarshalAs(UnmanagedType.Struct)] internal object vValue;
@@ -449,7 +462,12 @@ namespace System.Data.OleDb
                 dwOptions = v.dwOptions,
                 dwStatus = v.dwStatus,
                 vValue = v.vValue,
-                columnid = v.columnid
+                columnid = new tagDBIDX
+                {
+                    uGuid = v.columnid.uGuid,
+                    eKind = v.columnid.eKind,
+                    ulPropid = v.columnid.ulPropid
+                }
             };
         }
     }

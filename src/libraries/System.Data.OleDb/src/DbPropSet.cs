@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Globalization;
@@ -172,7 +174,12 @@ namespace System.Data.OleDb
                 }
             }
 
-            tagDBPROPSET propset = new tagDBPROPSET();
+            tagDBPROPSETBASE propset;
+            if (ODB.IsRunningOnX86)
+                propset = new tagDBPROPSET_x86();
+            else
+                propset = new tagDBPROPSET();
+
             tagDBPROP[] properties = null;
 
             bool mustRelease = false;
